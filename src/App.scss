@@ -1,3 +1,72 @@
+
+:root {
+  background: black; //#000032;
+}
+
+canvas {
+  position: absolute;
+  left: 0;
+  top:  0;
+}
+
 .App {
   text-align: center;
+  color: white;
+  font-family: Courier, Arial;
+  //transform-style: preserve-3d;
+}
+
+%centered-circle {
+  border-radius: 50%;
+  position: absolute;
+  //background: none;
+  left: calc(50% - var(--ra));
+  top:  calc(50% - var(--ra));
+  width:  calc(var(--ra) * 2);
+  height: calc(var(--ra) * 2);
+}
+
+.ca {
+  @extend %centered-circle;
+  box-shadow:
+          0 0  4px  3px rgba(255,255,255,.4),
+          0 0 15px 10px rgba(var(--r),var(--g),var(--b),var(--op)),
+    inset 0 0 15px  6px rgba(var(--r),var(--g),var(--b),var(--op));
+  animation: rotate-circle var(--t) ease-in infinite alternate; 
+  pointer-events: none;
+}
+
+.ctxt { // centered text
+  @extend %centered-circle;
+  box-shadow: inset 0 0 14px 8px rgba(128,128,128,.5);
+  animation: jiggle 10s linear infinite alternate; 
+  &:hover {
+    box-shadow: inset 0 0 24px 18px rgba(0,255,255,.7);
+    //text-shadow: 1px 1px 3px LightGray;
+  }
+}
+
+.stq {
+  color: DodgerBlue;
+  font-size: 20px;
+  font-weight: bold;
+  //text-shadow: 1px 1px 1px LightGray;
+}
+
+.s3d {
+  font-size: 16px;
+  color: Cyan;
+  .tail {
+    color: Magenta;
+  }
+}
+
+@keyframes rotate-circle {
+  from { transform: rotateY(0deg)   rotateX(0deg); }
+  to   { transform: rotateY(180deg) rotateX(180deg); }
+}
+
+@keyframes jiggle {
+  from { transform: rotateY(0deg)    rotateX(-23.5deg); }
+  to   { transform: rotateY(23.5deg) rotateX(23.5deg); }
 }
