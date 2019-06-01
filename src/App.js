@@ -137,7 +137,20 @@ function App() {
     rgba(0,  0,  205,op), // MediumBlue
   ];
 
-  const R = 100;
+  // 0: Chrome, 1: Safari, 2: Firefox
+  const detectBrowser = () => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf('safari') !== -1) {
+      return (ua.indexOf('chrome') > -1) ? 0 : 1;
+    }
+    if (ua.indexOf('firefox'))
+      return 2;
+    return -1;
+  }
+
+  // Safari does not show correctly overlapped circles.
+  const isSafari = detectBrowser() === 1;
+  const R  = 100;
   
   return (
     <div className="App">
@@ -151,8 +164,8 @@ function App() {
           <span className="s3d">Symbolic<span className="tail">3D</span></span>
         </div>
       </div>
-      <NeonColors colors={blues(1)}    ra={R + 20} dr={0} t={5} />
-      <NeonColors colors={rainbow(.3)} ra={R + 50} dr={0} t={60} />
+      <NeonColors colors={isSafari ? blues(1).slice(0, 1)    : blues(1)}    ra={R + 20} dr={0} t={5} />
+      <NeonColors colors={rainbow(.3)} ra={R + 60} dr={isSafari ? 10 : 0} t={60} />
     </div>
   );
 }
