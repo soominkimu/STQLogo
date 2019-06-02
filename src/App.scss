@@ -30,8 +30,8 @@ canvas {
   @extend %centered-circle;
   box-shadow:
           0 0  4px  3px rgba(255,255,255,.4),
-          0 0 15px 10px rgba(var(--r),var(--g),var(--b),var(--op)),
-    inset 0 0 15px  6px rgba(var(--r),var(--g),var(--b),var(--op));
+          0 0 15px 10px var(--cl),
+    inset 0 0 15px  6px var(--cl);
   animation: rotate-circle var(--t) ease-in infinite alternate; 
   pointer-events: none;
 }
