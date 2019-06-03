@@ -1,8 +1,8 @@
 {
-  "name": "SQLogo",
+  "name": "STQ",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://spacetimeq.github.io/logo/",
+  "homepage": "https://www.spacetimeq.com/",
   "dependencies": {
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
