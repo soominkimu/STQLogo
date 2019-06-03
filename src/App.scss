@@ -44,22 +44,33 @@ canvas {
     box-shadow: inset 0 0 24px 18px rgba(0,255,255,.7);
     //text-shadow: 1px 1px 3px LightGray;
   }
-}
 
-.stq {
-  color: DodgerBlue;
-  font-size: 20px;
-  font-weight: bold;
-  //text-shadow: 1px 1px 1px LightGray;
-}
+  .stq {
+    color: DodgerBlue;
+    font-size: 20px;
+    font-weight: bold;
+    //text-shadow: 1px 1px 1px LightGray;
+  }
 
-.s3d {
-  font-size: 16px;
-  color: Cyan;
-  .tail {
-    color: Magenta;
+  .s3d {
+    font-size: 16px;
+    color: Cyan;
+    .tail {
+      color: Magenta;
+    }
+  }
+
+  .tmf {  // time format
+    font-size: 14px;
+    color: Yellow;
+  }
+
+  .dtf {  // date format
+    font-size: 14px;
+    color: White;
   }
 }
+
 
 @keyframes rotate-circle {
   from { transform: rotateY(0deg)   rotateX(0deg); }

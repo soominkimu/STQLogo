@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { useWindowSize } from './util-ui';
+import React, { useState, useRef, useEffect } from 'react';
+import { useWindowSize, useInterval } from './util-ui';
 import {
   randomRange, randomInt, randomElement, τ
 } from './util-math';
@@ -78,6 +78,28 @@ const Demo = () =>
   </>;
 */
 
+const Datetime = () => {
+  const [datetime, SetDatetime] = useState({tm: '', dt: ''});
+  useInterval(() => {
+    const date = new Date(); 
+    const tm = date.getHours()     + ":"
+             + date.getMinutes()   + ":"
+             + date.getSeconds();
+    const dt = date.getDate()      + "/"
+             + (date.getMonth()+1) + "/"
+             + date.getFullYear();
+    SetDatetime({tm: tm, dt: dt});
+  }, 1000);
+
+  return (
+    <>
+      <span className="tmf">{datetime.tm}</span>
+      <br/>
+      <span className="dtf">{datetime.dt}</span>
+    </>
+  );
+}
+
 function App() {
   const ws = useWindowSize();
   const rainbow = op => [  // Roy G. Biv
@@ -101,6 +123,7 @@ function App() {
 
   // 0: Chrome, 1: Safari, 2: Firefox
   const detectBrowser = () => {
+    console.log("detectBrowser()");
     const ua = navigator.userAgent.toLowerCase();
     if (ua.indexOf('safari') !== -1)
       return (ua.indexOf('chrome') > -1) ? 0 : 1;
@@ -111,7 +134,7 @@ function App() {
 
   // Safari does not show correctly overlapped circles.
   const isSafari = detectBrowser() === 1;
-  const R  = 100;
+  const R = 100;
   
   return (
     <div className="App">
@@ -123,6 +146,8 @@ function App() {
           <span className="stq">SpacetimeQ</span>
           <br/>
           <span className="s3d">Symbolic<span className="tail">3D</span></span>
+          <br/>
+          <Datetime />
         </div>
       </div>
       <NeonColors colors={isSafari ? blues(1).slice(0, 1) : blues(1)} ra={R + 20} dr={0} t={5} />
