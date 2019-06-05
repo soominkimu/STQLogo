@@ -1,106 +1,91 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useWindowSize, useInterval } from './util-ui';
-import {
-  randomRange, randomInt, randomElement, τ
-} from './util-math';
+import React, { useState } from 'react';
+import { copyright, useWindowSize, useInterval } from './util-ui';
+import { StarryNight } from './effects';
+import { floor } from './util-math';
 import './App.scss';
 
-(function() { // ASCII ART: http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
-  console.log("╔═╗┌─┐┌─┐┌─┐┌─┐┌┬┐┬┌┬┐┌─┐╔═╗  Logo v0.1 - contact: dev.spacetimeq@gmail.com");
-  console.log("╚═╗├─┘├─┤│  ├┤  │ ││││├┤ ║═╬╗", Date());
-  console.log("╚═╝┴  ┴ ┴└─┘└─┘ ┴ ┴┴ ┴└─┘╚═╝╚ (C)2019 SpacetimeQ Inc, CA 94583");
-})();  // IIFE
+copyright("Logo v0,1");
 
-// Actually, we don't have to regenerate the pattern for each screen resize.
-// If we can save the result, just repaint with the same pattern for the new screen.
-const StarryNight = props => {
-  const canvasRef = useRef(null);
-  const txtCvsRef = useRef(document.createElement('canvas'));
-  const txtW = 301;
+// Safari does not show correctly overlapped circles.
+// 0: Chrome, 1: Safari, 2: Firefox
+const isSafari = (function() {
+  console.log("detectBrowser()");
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.indexOf('safari') !== -1)
+    return (ua.indexOf('chrome') > -1) ? 0 : 1;
+  if (ua.indexOf('firefox'))
+    return 2;
+  return -1;
+})() === 1; // IIFE
 
-  useEffect(() => {
-    const txtCvs = txtCvsRef.current;  // texture buffer canvas, offscreen
-    txtCvs.width  = txtW - 1;
-    txtCvs.height = txtW - 1;
-    const txt = txtCvs.getContext('2d', { alpha: false });  // no transparent, to optimize rendering
-
-    const randomHue = () => randomElement( [0, 30, 60, 90, 120, 180, 240] );  // colors
-    const stars = 300 + randomInt( 200 );
-
-    txt.clearRect(0, 0, txtCvs.width, txtCvs.height);  // Otherwise the pattern will be accumulated
-    for (let i=0; i < stars; i++) {
-      txt.beginPath();
-      txt.arc(randomInt( txtW ), randomInt( txtW ), randomRange(.1, .9, 2), 0, τ);
-      txt.fillStyle = `hsla(${randomHue()},${50 + randomInt( 50 )}%,88%,${randomRange(.4, 1-.4, 2)})`;
-      txt.fill();  // fill() was faster than stroke()
-    }
-    console.log(`${stars} stars generated in ${txtW-1}x${txtW-1} pattern.`);
-  }, []); // initialize only once
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d', { alpah: false });
-    ctx.fillStyle = ctx.createPattern(txtCvsRef.current, 'repeat');  // create pattern from txtCvs canvas in ctx
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }, [props.width, props.height]);  // only when size changes
-
+const NeonColors = ({ani, colors, ra, dr=12, t=0}) => {
+  const NeonCircle = props =>
+    <div className={ani}
+      style={{
+        '--ra': props.ra + 'px',
+        '--cl': props.color,
+        '--t' : props.t + 's',
+        '--bm': isSafari ? 'screen' : undefined  // 'normal'
+      }}
+    >
+      {props.children}
+    </div>;
   return (
-    <canvas ref={canvasRef} width={props.width} height={props.height} />
+    <>{colors.map((c, i) => <NeonCircle key={i} ra={ra + dr*i} color={c} t={t + i} />)}</>
   );
 }
 
-const NeonCircle = props =>
-  <div className="ca"
-    style={{
-      '--ra': props.ra + 'px',
-      '--cl': props.color,
-      '--t' : props.t + 's'
-    }}
-  >
-    {props.children}
-  </div>;
-
-const NeonColors = ({colors, ra, dr=12, t=0}) => {
-  const lns = [];
-  colors.forEach((c, i) =>
-    lns.push( <NeonCircle key={i} ra={ra + dr*i} color={c} t={t + i} ></NeonCircle>));
-
-  return ( <> {lns} </>);
-}
-
-/*
-const Demo = () =>
-  <>
-    <NeonCircle ra={10}  color={rgb(255, 0, 0)}   t={0} />
-    <NeonCircle ra={100} color={rgb(255, 0, 255)} t={2} />
-    <NeonCircle ra={150} color={rgb(0,   0, 255)} t={5} />
-    <NeonCircle ra={250} color={rgb(178, 34, 34)} t={10} />
-  </>;
-*/
-
 const Datetime = () => {
-  const [datetime, SetDatetime] = useState({tm: '', dt: ''});
+  const TF = {
+    en : "en-US",   // en-US, ja-JP, ko-KR, 
+    numeric: "numeric",
+    short: "short",
+  };
+  const getDatetime = (date = new Date()) => ({
+    tm: date.toLocaleTimeString(TF.en,
+      {
+        hour12: false,
+        hour  : TF.numeric,
+        minute: TF.numeric,
+        second: TF.numeric,
+        //timeZone: 'America/Los_Angeles'
+      }),
+    dt: date.toLocaleDateString(TF.en,
+      {
+        weekday: TF.short,
+        day    : TF.numeric,
+        month  : TF.numeric,
+        year   : TF.numeric, 
+        //timeZone: 'America/Los_Angeles'
+      })
+  });
+  const [datetime, SetDatetime] = useState(getDatetime());
   useInterval(() => {
-    const date = new Date(); 
+    /*
     const tm = date.getHours()     + ":"
              + date.getMinutes()   + ":"
              + date.getSeconds();
     const dt = date.getDate()      + "/"
              + (date.getMonth()+1) + "/"
              + date.getFullYear();
-    SetDatetime({tm: tm, dt: dt});
+    */
+    SetDatetime(getDatetime());
   }, 1000);
 
   return (
     <>
-      <span className="tmf">{datetime.tm}</span>
-      <br/>
+      <span className="tmf">{datetime.tm}</span><br/>
       <span className="dtf">{datetime.dt}</span>
     </>
   );
 }
 
 function App() {
+  const aniClass = [
+    "ca1",
+    "ca2"
+  ];
+  const [ani, setAni] = useState(0);
   const ws = useWindowSize();
   const rainbow = op => [  // Roy G. Biv
     `rgba(148,0,  211,${op})`, // Violet
@@ -116,47 +101,27 @@ function App() {
     `rgba(0,  0,  255,${op})`, // Blue
     `rgba(255,0,  255,${op})`, // Magenta
     `rgba(138,43, 226,${op})`, // BlueViolet
-    `rgba(135,206,235,${op})`, // SkyBlue
-    `rgba(65, 105,225,${op})`, // RoyalBlue
     `rgba(0,  0,  205,${op})`, // MediumBlue
   ];
 
-  // 0: Chrome, 1: Safari, 2: Firefox
-  const detectBrowser = () => {
-    console.log("detectBrowser()");
-    const ua = navigator.userAgent.toLowerCase();
-    if (ua.indexOf('safari') !== -1)
-      return (ua.indexOf('chrome') > -1) ? 0 : 1;
-    if (ua.indexOf('firefox'))
-      return 2;
-    return -1;
-  }
-
-  // Safari does not show correctly overlapped circles.
-  const isSafari = detectBrowser() === 1;
-  const R = 100;
+  const R = (ws.w < 400) ? 70 : 90;  // check only once at the start
   
   return (
-    <div className="App">
+    <div className="App" onDoubleClick={()=>setAni((ani + 1) % aniClass.length)}>
       <StarryNight width={ws.w} height={ws.h} />
       <div className="ctxt"
         style={{'--ra': R + 'px'}}
       >
-        <div style={{transform: `translateY(${R-20}px)`}}>
-          <span className="stq">SpacetimeQ</span>
-          <br/>
+        <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
+          <Datetime /><br/><br/>
+          <span className="stq">SpacetimeQ</span><br/>
           <span className="s3d">Symbolic<span className="tail">3D</span></span>
-          <br/>
-          <Datetime />
         </div>
       </div>
-      <NeonColors colors={isSafari ? blues(1).slice(0, 1) : blues(1)} ra={R + 20} dr={0} t={5} />
-      <NeonColors colors={rainbow(.3)} ra={R + 60} dr={isSafari ? 10 : 0} t={60} />
+      <NeonColors ani={aniClass[ani]} colors={blues(isSafari ? .5 : 1)}  ra={floor(R * 1.3)} dr={2} t={3} />
+      <NeonColors ani={aniClass[ani]} colors={rainbow(.3)}               ra={floor(R * 1.5)} dr={2} t={40} />
     </div>
   );
 }
-
-/*
-*/
 
 export default App;

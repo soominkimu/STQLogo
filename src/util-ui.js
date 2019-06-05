@@ -1,17 +1,22 @@
 // util-ui.js
 import React, { useState, useEffect, useRef } from 'react';
 
+export const copyright = (title) => {
+// ASCII ART: http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
+  console.log("╔═╗┌─┐┌─┐┌─┐┌─┐┌┬┐┬┌┬┐┌─┐╔═╗  " + title + " - contact: dev.spacetimeq@gmail.com");
+  console.log("╚═╗├─┘├─┤│  ├┤  │ ││││├┤ ║═╬╗", Date());
+  console.log("╚═╝┴  ┴ ┴└─┘└─┘ ┴ ┴┴ ┴└─┘╚═╝╚ (C)2019 SpacetimeQ Inc, CA 94583");
+};
+
 // reacts only to the width change
 export const useWindowWidth = () => {
+  const RESIZE = 'resize';
   const [winWidth, setWinWidth] = useState(window.innerWidth);
-
-  const handleWindowResize = () => {
-    setWinWidth(window.innerWidth);
-  }
+  const handleWindowResize = () => setWinWidth(window.innerWidth);
 
   useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
+    window.addEventListener(RESIZE, handleWindowResize);
+    return () => window.removeEventListener(RESIZE, handleWindowResize);
   }, []);
 
   return winWidth;
@@ -20,19 +25,18 @@ export const useWindowWidth = () => {
 // reacts to both width and height changes
 // aspect ration = w / h; Portrait (asp <= 1) Landscape (asp > 1)
 export const useWindowSize = () => {
-  const [winSize, setWinSize] = useState({
+  const RESIZE = 'resize';
+  const getWs = () => ({
     w: window.innerWidth,
     h: window.innerHeight
   });
-
-  const handleWindowResize = () => setWinSize({
-    w: window.innerWidth,
-    h: window.innerHeight
-  });
+  const [winSize, setWinSize] = useState(getWs());
+  const handleWindowResize = () => setWinSize(getWs());
 
   useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
+    window.addEventListener(RESIZE, handleWindowResize);
+    return () => window.removeEventListener(RESIZE, handleWindowResize);
+    // eslint-disable-next-line
   }, []);
 
   return winSize;
