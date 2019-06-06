@@ -82,8 +82,9 @@ const Datetime = () => {
 
 function App() {
   const aniClass = [
+    "ca2",
     "ca1",
-    "ca2"
+    "ca3",
   ];
   const [ani, setAni] = useState(0);
   const ws = useWindowSize();

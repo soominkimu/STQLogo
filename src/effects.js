@@ -9,33 +9,33 @@ import {
 //         Separate useEffect
 export const StarryNight = props => {
   const { width, height, ...others } = props;
-  const canvasRef = useRef(null);
-  const txtCvsRef = useRef(document.createElement('canvas'));
-  const txtW = 301;
+  const canvasRef = useRef(null);  // React will set .current property to the corresponding DOM node
+  const bufCvsRef = useRef(document.createElement('canvas'));  // to persist between renders
 
-  useEffect(() => {
-    const txtCvs = txtCvsRef.current;  // texture buffer canvas, offscreen
-    txtCvs.width  = txtW - 1;
-    txtCvs.height = txtW - 1;
-    const txt = txtCvs.getContext('2d', { alpha: false });  // no transparent, to optimize rendering
+  useEffect(() => {  // Offscreen buffer canvas
+    const bufW = 301;
+    const bufCvs = bufCvsRef.current;  // texture buffer canvas
+    bufCvs.width  = bufW - 1;
+    bufCvs.height = bufW - 1;
+    const buf = bufCvs.getContext('2d', { alpha: false });  // no transparent, to optimize rendering
 
     const randomHue = () => randomElement( [0, 30, 60, 90, 120, 180, 240] );  // colors
     const stars = 300 + randomInt( 200 );
 
-    txt.clearRect(0, 0, txtCvs.width, txtCvs.height);  // Otherwise the pattern will be accumulated
+    //buf.clearRect(0, 0, bufCvs.width, bufCvs.height);  // If repeated the pattern will be accumulated
     for (let i=0; i < stars; i++) {
-      txt.beginPath();
-      txt.arc(randomInt( txtW ), randomInt( txtW ), randomRange(.1, .9, 2), 0, τ);
-      txt.fillStyle = `hsla(${randomHue()},${50 + randomInt( 50 )}%,88%,${randomRange(.4, 1-.4, 2)})`;
-      txt.fill();  // fill() was faster than stroke()
+      buf.beginPath();
+      buf.arc(randomInt( bufW ), randomInt( bufW ), randomRange(.1, .9, 2), 0, τ);
+      buf.fillStyle = `hsla(${randomHue()},${50 + randomInt( 50 )}%,88%,${randomRange(.4, 1-.4, 2)})`;
+      buf.fill();  // fill() was faster than stroke()
     }
-    console.log(`${stars} stars generated in ${txtW-1}x${txtW-1} pattern.`);
+    console.log(`${stars} stars generated in ${bufW-1}x${bufW-1} pattern.`);
   }, []); // initialize only once
 
-  useEffect(() => {
+  useEffect(() => {  // On screen canvas
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d'); //, { alpah: false });
-    ctx.fillStyle = ctx.createPattern(txtCvsRef.current, 'repeat');  // create pattern from txtCvs canvas in ctx
+    ctx.fillStyle = ctx.createPattern(bufCvsRef.current, 'repeat');  // create pattern from bufCvs canvas in ctx
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }, [width, height]);  // only when size changes
 
@@ -44,7 +44,7 @@ export const StarryNight = props => {
       style={{
         position: 'absolute',
         left: 0,
-        top: 0,
+        top : 0,
         ...others  // visiblity works only in style object
       }}
     />
@@ -67,13 +67,14 @@ export const BackDrop = props => {
 
   return (
     <div style={{
-      position:  'absolute',
-      width:      props.width,
-      height:     props.height,
-      transition: 'background 2s',
-      background: back[id]
-    }}
-    onDoubleClick={() => setBackId(backId + 1)}>
+        position:  'absolute',
+        width:      props.width,
+        height:     props.height,
+        transition: 'background 2s',
+        background: back[id]
+      }}
+      onDoubleClick={() => setBackId(backId + 1)}
+    >
       <StarryNight width={props.width} height={props.height}
                    visibility={(back[id].substring(0,3) === 'url') ? 'hidden' : 'visible'} />
     </div>
