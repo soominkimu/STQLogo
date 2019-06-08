@@ -37,9 +37,9 @@ const NeonColors = ({ani, colors, ra, dr=12, t=0}) => {
 
 const Datetime = () => {
   const TF = {
-    en : "en-US",   // en-US, ja-JP, ko-KR, 
+    en     : "en-US",   // en-US, ja-JP, ko-KR, 
     numeric: "numeric",
-    short: "short",
+    short  : "short",
   };
   const getDatetime = (date = new Date()) => ({
     tm: date.toLocaleTimeString(TF.en,
