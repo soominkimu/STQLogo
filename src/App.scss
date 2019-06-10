@@ -1,5 +1,6 @@
 :root {
   background: black; //#000032;
+  // font-size: 16px;  // rem will depend on this.
 }
 
 @font-face {
@@ -26,7 +27,7 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
 }
 
 %outer-circle {
-  pointer-events: none;
+  pointer-events: none;  // disable pointer events (clicking, dragging, hovering, etc.)
   //isolation: isolative;
   //background-blend-mode: normal;
   mix-blend-mode: var(--bm);  // for safari, to avoid overlap issue, set to 'screen'
@@ -64,11 +65,18 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
   animation: ani-exp var(--t) ease-out infinite alternate; 
 }
 
+%tmf-dtf-common {
+  font-family: $digital-font;
+}
 %stq-s3d-common {
   text-shadow: 1px 1px 1px black;
 }
-%tmf-dtf-common {
-  font-family: $digital-font;
+
+%popup {
+  //box-shadow: inset 0 0 24px 18px rgba(0,255,255,.7);
+  //text-shadow: 1px 1px 3px LightGray;
+  z-index: 1000;
+  transform: scale(2) translateY(-65px);
 }
 
 .ctxt { // centered text
@@ -79,20 +87,41 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
   transition: transform 1s cubic-bezier(.75,-0.5,0,1.75); // easing function: elastic bouncing
   //animation: jiggle 10s linear infinite alternate; 
   &:hover {
-    //box-shadow: inset 0 0 24px 18px rgba(0,255,255,.7);
-    //text-shadow: 1px 1px 3px LightGray;
-    z-index: 1000;
-    transform: scale(2) translateY(-70px);
+    @extend %popup;
   }
-
-  .stq {
-    font-size: 15px;
+  .tmf {  // time format
+    @extend %tmf-dtf-common;
+    font-size: 1.9rem;
+    color: LightCyan;
+    text-shadow: 0 0 2px blue, 0 0 3px yellow, 0 0 4px white, -2px -2px 4px blue, 2px 2px 4px blue;
+  }
+  .dtf {  // date format
+    @extend %tmf-dtf-common;
+    font-size: 1.1rem;
+    color: CornSilk;
+    &[data-w='0'] { color: Red; }
+    &[data-w='6'] { color: DodgerBlue; }
+  }
+  .pgb {  // Progress Bar
+    @extend %tmf-dtf-common;
+    font-size: .3rem;
+    color: Blue;
+    .on  {
+      color: Cyan;
+      text-shadow: 0 0 4px white, -2px -2px 4px blue, 2px 2px 4px blue;
+    }
+  }
+  .stq {  // SpacetimeQ
+    font-size: 1rem;
     font-weight: bold;
-    color: DodgerBlue;
     @extend %stq-s3d-common;
+    color: DodgerBlue;
+    .tail {
+      color: BlueViolet;
+    }
   }
-  .s3d {
-    font-size: 13px;
+  .s3d {  // Symbolic3D
+    font-size: .8rem;
     color: Cyan;
     @extend %stq-s3d-common;
     .tail {
@@ -100,20 +129,13 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
     }
   }
 
-  .tmf {  // time format
-    @extend %tmf-dtf-common;
-    font-size: 26px;
-    color: LightGreen;
-    text-shadow: 0 0 2px blue, 0 0 3px yellow, 0 0 4px white, -2px -2px 4px blue, 2px 2px 4px blue;
-  }
-  .dtf {  // date format
-    @extend %tmf-dtf-common;
-    font-size: 16px;
-    color: Cornsilk;
-  }
 }
 
 /*
+.popup {  // for mobile safari
+  @extend %popup;
+}
+
 .spotlight {
   @extend %centered-circle;
   background: radial-gradient(circle, white, transparent 25%) center / 50% 50%,
@@ -125,15 +147,15 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
   background: radial-gradient(circle, white, transparent 25%) center / 25%   25%,
               radial-gradient(circle, white, black       25%) center / 12.5% 12.5%;
 
-@keyframes jiggle {
-  from { transform: rotateY(0deg)    rotateX(-23.5deg); }
-  to   { transform: rotateY(23.5deg) rotateX(23.5deg); }
-}
 
 @keyframes ani-rotate {
   to { transform: rotateZ(360deg); }
 }
 */
+@keyframes jiggle {
+  from { transform: rotateY(0deg)    rotateX(-23.5deg); }
+  to   { transform: rotateY(43.5deg) rotateX(23.5deg); }
+}
 
 @keyframes ani-cloud {
   from { transform: rotateZ(0deg)   scaleX(.9)  scaleY(.9)  rotateY(0deg); }

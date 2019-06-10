@@ -48,6 +48,7 @@ const Datetime = () => {
         hour  : TF.numeric,
         minute: TF.numeric,
         second: TF.numeric,
+        //timeZoneName: TF.short,
         //timeZone: 'America/Los_Angeles'
       }),
     dt: date.toLocaleDateString(TF.en,
@@ -57,25 +58,32 @@ const Datetime = () => {
         month  : TF.numeric,
         year   : TF.numeric, 
         //timeZone: 'America/Los_Angeles'
-      })
+      }),
+    dow: date.getDay(),  // Sun - Sat: 0 - 6
+    hrs: date.getHours()  // elapsed seconds
   });
-  const [datetime, SetDatetime] = useState(getDatetime());
+
+  const [datetime, setDatetime] = useState(getDatetime());  // initial setting
+
   useInterval(() => {
-    /*
-    const tm = date.getHours()     + ":"
-             + date.getMinutes()   + ":"
-             + date.getSeconds();
-    const dt = date.getDate()      + "/"
-             + (date.getMonth()+1) + "/"
-             + date.getFullYear();
-    */
-    SetDatetime(getDatetime());
+    setDatetime(getDatetime());
   }, 1000);
+
+  // Making this use-defined component <ProgressHours nH={} /> causes re-render every second
+  const progressHours = nH => {
+    const pgb = n => {
+      const PB = '■■■■■■■■■■■■■■■■■■■■■■■■';  // ASCII 254 ■
+      //console.log(n);
+      return PB.slice(0, n);
+    }
+    return <div className="pgb"><span className="on">{pgb(nH)}</span>{pgb(24-nH)}</div>
+  }
 
   return (
     <>
       <span className="tmf">{datetime.tm}</span><br/>
-      <span className="dtf">{datetime.dt}</span>
+      <span className="dtf" data-w={datetime.dow}>{datetime.dt}</span><br/>
+      {progressHours(datetime.hrs)}
     </>
   );
 }
@@ -86,7 +94,8 @@ function App() {
     "ca1",
     "ca3",
   ];
-  const [ani, setAni] = useState(0);
+  const [ani,   setAni]   = useState(0);
+
   const ws = useWindowSize();
   const rainbow = op => [  // Roy G. Biv
     `rgba(148,0,  211,${op})`, // Violet
@@ -105,22 +114,29 @@ function App() {
     `rgba(0,  0,  205,${op})`, // MediumBlue
   ];
 
-  const R = (ws.w < 400) ? 70 : 90;  // check only once at the start
-  
+  const R = (ws.w < 400) ? 76 : 90;  // check only once at the start
+  // onClick={()=>void(0)}  // mobile Safari hover
   return (
     <div className="App" onDoubleClick={()=>setAni((ani + 1) % aniClass.length)}>
       <StarryNight width={ws.w} height={ws.h} />
-      <div className="ctxt"
+      <div className={"ctxt"}
         style={{'--ra': R + 'px'}}
       >
         <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
-          <Datetime /><br/><br/>
-          <span className="stq">SpacetimeQ</span><br/>
+          <Datetime /><br/>
+          <span className="stq">Spacetime<span className="tail">Q</span></span><br/>
           <span className="s3d">Symbolic<span className="tail">3D</span></span>
         </div>
       </div>
-      <NeonColors ani={aniClass[ani]} colors={blues(isSafari ? .5 : 1)}  ra={floor(R * 1.3)} dr={2} t={3} />
-      <NeonColors ani={aniClass[ani]} colors={rainbow(.3)}               ra={floor(R * 1.5)} dr={2} t={40} />
+      <div className={"ctxt"}
+        style={{'--ra': R * .8 + 'px', top: '650px'}}
+      >
+        <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
+          <Datetime /><br/>
+        </div>
+      </div>
+      <NeonColors ani={aniClass[ani]} colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
+      <NeonColors ani={aniClass[ani]} colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
     </div>
   );
 }
