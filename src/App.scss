@@ -76,7 +76,7 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
   //box-shadow: inset 0 0 24px 18px rgba(0,255,255,.7);
   //text-shadow: 1px 1px 3px LightGray;
   z-index: 1000;
-  transform: scale(2) translateY(-65px);
+  transform: scale(2); // translateY(-25px);
 }
 
 .ctxt { // centered text
@@ -130,11 +130,8 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
   }
 }
 
-.neon {
-  transition: transform 3s, opacity 3s;
-}
-.opct {
-  opacity: var(--op);
+.l1 {  // layer 1
+  transition: transform 3s ease-out, opacity 5s;
 }
 
 /*
@@ -174,3 +171,44 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
 @keyframes ani-hair {
   to   { transform: rotateX(180deg) rotateY(180deg); }
 }
+
+@mixin btnDemo($borderColor) {
+  background-color: Gainsboro;
+  border: 2px solid $borderColor;
+  color: black;
+  padding: 4px 4px;
+  font: small "Courier New", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin: 1px 2px;
+  z-index: 100;
+}
+
+.btn-cont {  // button container
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-left: 10px;
+  padding-top: 20px;
+}
+
+.test-btn {
+  left: 10px;
+  top:  10px;
+  padding: 4px;
+  margin:  2px;
+  border-radius: 10%;
+  @include btnDemo(#4caf50);
+}
+
+.test-btn:disabled,
+test-btn[disabled] {
+  border: 1px solid olive;
+  background-color: darkgray;
+  color: SlateGray;
+}
+

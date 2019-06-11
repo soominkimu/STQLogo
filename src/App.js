@@ -87,7 +87,8 @@ const Datetime = () => {
 }
 
 function App() {
-  const ani = useRef(null);
+  const r1El = useRef(null);  // imperative control of DOM, not to re-render (need to kepp CSS animation)
+  const r2El = useRef(null);
 
   const ws = useWindowSize();
   const rainbow = op => [  // Roy G. Biv
@@ -109,12 +110,28 @@ function App() {
 
   const R = (ws.w < 400) ? 76 : 90;  // check only once at the start
   // onClick={()=>void(0)}  // mobile Safari hover
+  const cY = ws.h * .5;
+  const transCY = `translateY(${cY}px)`;
+
+  const setAni = (r1, r2) => {
+    const aniSt = [
+      `transform: ${transCY} scale(1);   opacity: 1;`,
+      `transform: ${transCY} scale(1.7); opacity: .2;`,
+      `transform: ${transCY} scale(0);   opacity: 0;`
+    ];
+    r1El.current.style = aniSt[r1];
+    r2El.current.style = aniSt[r2];
+  }
+
   return (
-    <div className="App" onDoubleClick={()=>{ani.current.style=`--op: .2; transform: translateY(450px) scale(2);`;}}>
+    <div className="App">
       <StarryNight width={ws.w} height={ws.h} />
-      <div className="neon" style={{opacity: 1}}>
+      <div className="l1" style={{opacity: 1}}
+        onMouseEnter={()=>setAni(1, 1)}
+        onMouseLeave={()=>setAni(0, 0)}
+      >
         <div className="ctxt"
-          style={{'--ra': R + 'px'}}
+          style={{'--ra': R + 'px', top: `translateY(${cY - R}px)`}}
         >
           <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
             <Datetime /><br/>
@@ -123,24 +140,27 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="ctxt"
-        style={{'--ra': R * .8 + 'px', top: '650px'}}
-      >
-        <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
-          <Datetime /><br/>
-        </div>
-      </div>
-      <div className="neon">
-        <NeonColors ani="ca2" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
-        <NeonColors ani="ca2" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
-      </div>
-      <div ref={ani} className="neon opct" style={{transform: `translateY(450px)`}}>
+      <div ref={r1El} className="l1" style={{transform: transCY}}>
         <NeonColors ani="ca1" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
         <NeonColors ani="ca1" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
       </div>
-      <button type="button" onClick={()=>{ani.current.style=`--op: 1; transform: translateY(450px) scale(1);`}}style={{background: 'white', zIndex: "2000"}}>Test</button>
+      <div ref={r2El} className="l1" style={{transform: transCY}}>
+        <NeonColors ani="ca2" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
+        <NeonColors ani="ca2" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
+      </div>
+      <div className="btn-cont">
+        <TBtn onClick={()=>setAni(1,1)}>Test1</TBtn>
+        <TBtn onClick={()=>setAni(0,0)}>Test2</TBtn>
+        <TBtn onClick={()=>setAni(2,2)}>Test3</TBtn>
+        <TBtn onClick={()=>setAni(0,1)}>Test4</TBtn>
+        <TBtn onClick={()=>setAni(1,0)}>Test5</TBtn>
+        <TBtn onClick={()=>setAni(0,2)}>Test6</TBtn>
+        <TBtn onClick={()=>setAni(2,0)}>Test7</TBtn>
+      </div>
     </div>
   );
 }
+
+ const TBtn = props => <button type="button" className="test-btn" {...props}>{props.children}</button>;
 
 export default App;
