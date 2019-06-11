@@ -213,3 +213,14 @@ export function useAnimationFrame(callback, delay) {
     return () => cancelAnimationFrame(frameId);
   }, [delay]);
 }
+
+// 0: Chrome, 1: Safari, 2: Firefox
+export const detectBrowser = () => {
+  console.log("detectBrowser()");
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.indexOf('safari') !== -1)
+    return (ua.indexOf('chrome') > -1) ? 0 : 1;
+  if (ua.indexOf('firefox'))
+    return 2;
+  return -1;
+}
