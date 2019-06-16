@@ -155,13 +155,13 @@ function App() {
       </div>
       <div className="btn-cont"
            style={{transform: `translateY(${cY + R * 3}px)`}}>
-        <TBtn onClick={()=>setAni(0,0)}>1</TBtn>
-        <TBtn onClick={()=>setAni(1,1)}>2</TBtn>
-        <TBtn onClick={()=>setAni(0,1)}>3</TBtn>
-        <TBtn onClick={()=>setAni(1,0)}>4</TBtn>
-        <TBtn onClick={()=>setAni(2,0)}>5</TBtn>
-        <TBtn onClick={()=>setAni(0,2)}>6</TBtn>
-        <TBtn onClick={()=>setAni(2,2)}>7</TBtn>
+        <TBtn onClick={()=>setAni(0,0)} />
+        <TBtn onClick={()=>setAni(1,1)} />
+        <TBtn onClick={()=>setAni(0,1)} />
+        <TBtn onClick={()=>setAni(1,0)} />
+        <TBtn onClick={()=>setAni(2,0)} />
+        <TBtn onClick={()=>setAni(0,2)} />
+        <TBtn onClick={()=>setAni(2,2)} />
       </div>
     </div>
   );
