@@ -51,8 +51,8 @@ const Datetime = () => {
         year   : TF.numeric, 
         //timeZone: 'America/Los_Angeles'
       }),
-    dow: date.getDay(),  // Sun - Sat: 0 - 6
-    hrs: date.getHours()  // elapsed seconds
+    dow: date.getDay(),   // Sun - Sat: 0 - 6
+    hrs: date.getHours()  // 0..23
   });
 
   const [datetime, setDatetime] = useState(getDatetime());  // initial setting
@@ -67,11 +67,10 @@ const Datetime = () => {
     return <span className="dtf" data-w={datetime.dow}>{dtS}</span>;
   }
 
-  // Making this use-defined component <ProgressHours nH={} /> causes re-render every second
+  // Making this user-defined component <ProgressHours nH={} /> causes re-render every second
   const progressHours = nH => {
     const pgb = n => {
       const PB = '■■■■■■■■■■■■■■■■■■■■■■■■';  // ASCII 254 ■
-      //console.log(n);
       return PB.slice(0, n);
     }
     return <div className="pgb"><span className="on">{pgb(nH)}</span>{pgb(24-nH)}</div>
@@ -112,55 +111,63 @@ function App() {
   // onClick={()=>void(0)}  // mobile Safari hover
   const cY = ws.h * .5;
   const transCY = `translateY(${cY}px)`;
-
-  const setAni = (r1, r2) => {
+  
+  // should be applied on the wrapper <div> and not on the CSS animation layer (so that not to override transfrom)
+  const setAni = (r1, r2) => {  // Direct DOM manipulation without rendering
+    const aniFm = (sc, op) => `transform: scale(${sc}); opacity:${op};`;
     const aniSt = [
-      `transform: ${transCY} scale(1);   opacity: 1;`,
-      `transform: ${transCY} scale(1.7); opacity: .2;`,
-      `transform: ${transCY} scale(0);   opacity: 0;`
+      aniFm(1,   1),
+      aniFm(1.7, .2),
+      aniFm(0,   0)
     ];
-    r1El.current.style = aniSt[r1];
-    r2El.current.style = aniSt[r2];
-  }
+    r1El.current.setAttribute("style", aniSt[r1]);  // r1El.current.style = aniSt[r1];
+    r2El.current.setAttribute("style", aniSt[r2]);
+  };
+
+  console.log("render");
 
   return (
     <div className="App">
       <StarryNight width={ws.w} height={ws.h} />
-      <div className="l1" style={{opacity: 1}}
-        onMouseEnter={()=>setAni(1, 1)}
-        onMouseLeave={()=>setAni(0, 0)}
-      >
-        <div className="ctxt"
-          style={{'--ra': R + 'px', top: `translateY(${cY - R}px)`}}
-        >
-          <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
-            <Datetime /><br/>
-            <span className="stq">Spacetime<span className="tail">Q</span></span><br/>
-            <span className="s3d">Symbolic<span className="tail">3D</span></span>
+      <div className="l3" style={{transform: transCY}}>
+        <div className="l2">
+          <div className="l1" style={{opacity: 1}}
+            onMouseEnter={()=>setAni(1,1)}
+            onMouseLeave={()=>setAni(0,0)}
+          >
+            <div className="ctxt" style={{'--ra': R + 'px'}}>
+              <div style={{transform: `translateY(${floor(R * .5)}px)`}}>
+                <Datetime /><br/>
+                <span className="stq">Spacetime<span className="tail">Q</span></span><br/>
+                <span className="s3d">Symbolic<span className="tail">3D</span></span>
+              </div>
+            </div>
+          </div>
+          <div ref={r1El} className="l1">
+            <NeonColors ani="ca1" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
+            <NeonColors ani="ca1" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
+          </div>
+          <div ref={r2El} className="l1">
+            <NeonColors ani="ca2" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
+            <NeonColors ani="ca2" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
           </div>
         </div>
       </div>
-      <div ref={r1El} className="l1" style={{transform: transCY}}>
-        <NeonColors ani="ca1" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
-        <NeonColors ani="ca1" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
-      </div>
-      <div ref={r2El} className="l1" style={{transform: transCY}}>
-        <NeonColors ani="ca2" colors={blues(isSafari ? .5 : 1)} ra={floor(R * 1.3)} dr={2} t={3} />
-        <NeonColors ani="ca2" colors={rainbow(.3)}              ra={floor(R * 1.5)} dr={2} t={40} />
-      </div>
-      <div className="btn-cont">
-        <TBtn onClick={()=>setAni(1,1)}>Test1</TBtn>
-        <TBtn onClick={()=>setAni(0,0)}>Test2</TBtn>
-        <TBtn onClick={()=>setAni(2,2)}>Test3</TBtn>
-        <TBtn onClick={()=>setAni(0,1)}>Test4</TBtn>
-        <TBtn onClick={()=>setAni(1,0)}>Test5</TBtn>
-        <TBtn onClick={()=>setAni(0,2)}>Test6</TBtn>
-        <TBtn onClick={()=>setAni(2,0)}>Test7</TBtn>
+      <div className="btn-cont"
+           style={{transform: `translateY(${cY + R * 3}px)`}}>
+        <TBtn onClick={()=>setAni(0,0)}>1</TBtn>
+        <TBtn onClick={()=>setAni(1,1)}>2</TBtn>
+        <TBtn onClick={()=>setAni(0,1)}>3</TBtn>
+        <TBtn onClick={()=>setAni(1,0)}>4</TBtn>
+        <TBtn onClick={()=>setAni(2,0)}>5</TBtn>
+        <TBtn onClick={()=>setAni(0,2)}>6</TBtn>
+        <TBtn onClick={()=>setAni(2,2)}>7</TBtn>
       </div>
     </div>
   );
 }
+//, 
 
- const TBtn = props => <button type="button" className="test-btn" {...props}>{props.children}</button>;
+const TBtn = props => <button type="button" className="test-btn" {...props}>{props.children}</button>;
 
 export default App;
