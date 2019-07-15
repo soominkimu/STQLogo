@@ -198,8 +198,7 @@ $digital-font: 'digital-7', 'Orbitron', sans-serif;
 .test-btn {
   background: transparent;
   border-radius: 50%;
-  border: 4px solid rgba(154,205,50,.3);
-  color: rgba(0,255,0,.4);
+  border: 4px solid rgba(154,205,50,.4);
   padding: 4px 4px;
   font: small "Courier New", sans-serif;
   text-align: center;
@@ -225,4 +224,48 @@ test-btn[disabled] {
   border: 1px solid olive;
   background-color: darkgray;
   color: SlateGray;
+}
+
+.proto {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  line-height: 2em;
+  margin-top: 3em;
+  font-family: Courier;
+  color: white;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    list-style: none;
+    //padding-left: 1em;
+    text-indent: -.7em;
+    &::before {
+      font-size: small;
+      content: "✨  ";
+    }
+  }
+  a {
+    text-decoration: none;
+    &:hover {
+      text-shadow: 0 0 5px pink;
+    }
+    &:link {
+      color: yellow;
+    }
+    &:visited {
+      color: SkyBlue;
+    }
+  }
+  p {
+    span {
+      color: Crimson;
+    }
+    color: CornSilk;
+    font-size: x-small;
+    font-style: italic;
+  }
 }

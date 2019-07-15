@@ -7,6 +7,7 @@ import {
 // If we can save the result, just repaint with the same pattern for the new screen.
 // UPDATE: Generate stars pattern only once, and reuse the pattern for each window resizing response
 //         Separate useEffect
+// - alpha should be set true to show the background color changes. And :root { background: black; }.
 export const StarryNight = props => {
   const { width, height, ...others } = props;
   const canvasRef = useRef(null);  // React will set .current property to the corresponding DOM node
@@ -17,7 +18,7 @@ export const StarryNight = props => {
     const bufCvs = bufCvsRef.current;  // texture buffer canvas
     bufCvs.width  = bufW - 1;
     bufCvs.height = bufW - 1;
-    const buf = bufCvs.getContext('2d', { alpha: false });  // no transparent, to optimize rendering
+    const buf = bufCvs.getContext('2d', { alpha: true });  // no transparent, to optimize rendering
 
     const randomHue = () => randomElement( [0, 30, 60, 90, 120, 180, 240] );  // colors
     const stars = 300 + randomInt( 200 );
@@ -71,7 +72,8 @@ export const BackDrop = props => {
         width:      props.width,
         height:     props.height,
         transition: 'background 2s',
-        background: back[id]
+        background: back[id],
+        zIndex:     '-10'
       }}
       onDoubleClick={() => setBackId(backId + 1)}
     >

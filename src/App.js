@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { copyright, useWindowSize, useInterval, detectBrowser } from './util-ui';
-import { StarryNight } from './effects';
-import { floor } from './util-math';
+import { BackDrop } from './effects';
+import { floor }    from './util-math';
 import './App.scss';
 
-copyright("Logo v0,1");
+copyright("Logo v0,2");
 
 // Safari shows conflicting animation for the overlapped circles.
 // 0: Chrome, 1: Safari, 2: Firefox
@@ -128,7 +128,15 @@ function App() {
 
   return (
     <div className="App">
-      <StarryNight width={ws.w} height={ws.h} />
+      <BackDrop width={ws.w} height={ws.h} />
+      <div className="proto">
+        <ul>
+          <li><a href="https://test.spacetimeq.com">SpacetimeQ Experiments</a></li>
+          <li><a href="https://spacetimeq.github.io">Calendar 3D Demo</a></li>
+          <li><a href="https://demo.spacetimeq.com">Video/Webcam Editor Prototype</a></li>
+        </ul>
+        <p><span>Tips</span> Double Click to change the background scene.</p>
+      </div>
       <div className="l3" style={{transform: transCY}}>
         <div className="l2">
           <div className="l1" style={{opacity: 1}}
