@@ -245,7 +245,8 @@ test-btn[disabled] {
     text-indent: -.7em;
     &::before {
       font-size: small;
-      content: "✨  ";
+      color: Red;
+      content: attr(data-b);  // bullet
     }
   }
   a {
@@ -262,7 +263,7 @@ test-btn[disabled] {
   }
   p {
     span {
-      color: Crimson;
+      color: Blue;
     }
     color: CornSilk;
     font-size: x-small;

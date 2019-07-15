@@ -131,9 +131,11 @@ function App() {
       <BackDrop width={ws.w} height={ws.h} />
       <div className="proto">
         <ul>
-          <li><a href="https://test.spacetimeq.com">SpacetimeQ Experiments</a></li>
-          <li><a href="https://spacetimeq.github.io">Calendar 3D Demo</a></li>
-          <li><a href="https://demo.spacetimeq.com">Video/Webcam Editor Prototype</a></li>
+          <li data-b="✨"><a href="https://test.spacetimeq.com">SpacetimeQ Experiments</a></li>
+          <li data-b="✨"><a href="https://spacetimeq.github.io">Calendar 3D Demo</a></li>
+          <li data-b="NEW🔥"><span className="hot"></span>
+            <a href="https://demo.spacetimeq.com">Video/Webcam Editor Prototype</a>
+          </li>
         </ul>
         <p><span>Tips</span> Double Click to change the background scene.</p>
       </div>
