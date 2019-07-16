@@ -233,6 +233,7 @@ test-btn[disabled] {
   line-height: 2em;
   margin-top: 3em;
   font-family: Courier;
+  font-weight: bold;
   color: white;
   ul {
     list-style: none;
@@ -252,10 +253,10 @@ test-btn[disabled] {
   a {
     text-decoration: none;
     &:hover {
-      text-shadow: 0 0 5px pink;
+      text-shadow: 0 0 10px pink;
     }
     &:link {
-      color: yellow;
+      color: white;
     }
     &:visited {
       color: SkyBlue;
