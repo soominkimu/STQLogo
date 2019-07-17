@@ -1,7 +1,7 @@
 // util-ui.js
 import React, { useState, useEffect, useRef } from 'react';
 
-export const copyright = (title) => {
+export const copyright = title => {
 // ASCII ART: http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
   console.log("╔═╗┌─┐┌─┐┌─┐┌─┐┌┬┐┬┌┬┐┌─┐╔═╗  " + title + " - contact: dev.spacetimeq@gmail.com");
   console.log("╚═╗├─┘├─┤│  ├┤  │ ││││├┤ ║═╬╗", Date());
@@ -102,6 +102,7 @@ export function useKeyPress(targetKey) {
 // Mouse / TrackPad Event Handlers Wrapper
 // props.render should be provided, that handles changed x, y position
 export const EventMove = props => {
+  const { render, ...others }      = props;
   const [mousedown,  setMouseDown] = useState(false);
   const [mouse,      setMouse]     = useState({x: 0, y: 0});
 
@@ -157,6 +158,7 @@ export const EventMove = props => {
       onTouchStart = {handleTouchStart}
       onTouchMove  = {handleTouchMove}
       onTouchEnd   = {handleTouchEnd}
+      {...others}
     >
       {props.children}
     </div>
@@ -224,3 +226,5 @@ export const detectBrowser = () => {
     return 2;
   return -1;
 }
+
+export const isSafari = detectBrowser() === 1;
