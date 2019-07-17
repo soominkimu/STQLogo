@@ -2,12 +2,21 @@ import React, { useRef } from 'react';
 import { copyright,
          useWindowSize } from './util-ui';
 import { BackDrop }      from './effects';
-import { AniNeonColors } from './ani-neon';
+import { AniNeonColors,
+         transParam,
+         aniCombi }      from './ani-neon';
 import { ClockProgBar }  from './clock-pb';
 import { ArticlesList }  from './articles';
 import './App.scss';
 
 copyright("Logo v0.3");
+
+/*
+ * Basically we have two classes of animations defined in css:
+ * animation classes: "ani1": ani-cloud, "ani2": ani-hair
+ * And then, three types of transforms (scale and opacity) are applied to each of the two animations
+ * with the combinations defined in anidef.json file.
+*/
 
 function App() {
   const rEA = [   // imperative control of DOM, not to re-render (in order to kepp CSS animation)
@@ -21,32 +30,26 @@ function App() {
   // onClick={()=>void(0)}  // mobile Safari hover
   const cY = ws.h * .5;
   
+  // requires "transform" in anidef.json (parameters for the transform)
   // should be applied on the wrapper <div> and not on the CSS animation layer (so that not to override transfrom)
-  const setAni = (r0, r1) => {  // Direct DOM manipulation without rendering
-    const param = [ // parameters for the transform { scale, opacity }
-      {sc: 1,   op: 1},
-      {sc: 1.7, op: 1},
-      {sc: 0,   op: 0},
-    ];
+  const setAniCombi = ac => {  // Direct DOM manipulation without rendering
     const setStyle = (rEl, p) =>
-      rEl.current.setAttribute("style", `transform: scale(${p.sc}); opacity:${p.op};`);
+      rEl.current.setAttribute("style", `transform: scale(${p.scale}); opacity:${p.opacity};`);
 
-    setStyle(rEA[0], param[r0]);
-    setStyle(rEA[1], param[r1]);
-  };
-
-  const Controls = () => {
-    const aniList = [ // variations of the transform parameters (indexed)
-      [0,0],[1,1],[0,1],[1,0],[2,0],[0,2],[2,2]
-    ];
-    return (
-      <div className="btn-cont"
-           style={{transform: `translateY(${cY + R * 3}px)`}}>
-           {aniList.map(a =>
-             <button type="button" className="test-btn" onClick={()=>setAni(a[0], a[1])} />)}
-      </div>
-    );
+    setStyle(rEA[0], transParam[ac.ref0]);
+    setStyle(rEA[1], transParam[ac.ref1]);
   }
+
+  // requires "combination" in anidef.json: variations of the transform parameters (indexed)
+  const Controls = () =>
+    <div className="btn-cont"
+         style={{transform: `translateY(${cY + R * 3}px)`}}>
+         {aniCombi.map( (ac, i) =>
+           <button key={i} type="button" className="test-btn"
+             onClick={()=>setAniCombi(ac)}
+           /> )
+         }
+    </div>;
 
   console.log("App::render");
 
@@ -57,8 +60,8 @@ function App() {
       <div className="l3" style={{transform: `translateY(${cY}px)`}}>
         <div className="l2">
           <div className="l1" style={{opacity: 1}}
-            onMouseEnter={()=>setAni(1,1)}
-            onMouseLeave={()=>setAni(0,0)}
+            onMouseEnter={()=>setAniCombi(aniCombi[1])}
+            onMouseLeave={()=>setAniCombi(aniCombi[0])}
           >
             <div className="ctxt" style={{'--ra': R + 'px'}}>
               <div style={{transform: `translateY(${Math.floor(R * .5)}px)`}}>

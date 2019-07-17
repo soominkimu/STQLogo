@@ -1,13 +1,52 @@
-import React, { useState } from 'react';
-import { useInterval }  from './util-ui';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useInterval }   from './util-ui';
 
 export const ClockProgBar = () => {
-  const TF = {
+  const [datetime, setDatetime] = useState({dt:"", dow:1, hrs:0});
+
+  const dateFormat = (date, dow) => {
+    let dtS = date.slice(0,3);
+    dtS    += date.slice(4,14);
+    console.log("dateFormat", dtS);
+    return <span className="dtf" data-w={dow}>{dtS}</span>;
+  }
+
+  const ProgressHours = ({nH}) => {
+    const PB = '■■■■■■■■■■■■■■■■■■■■■■■■'; // ASCII 254 ■ x 24
+    console.log("progressHours", nH);
+    return <div className="pgb">
+        <span className="on">{PB.slice(0, nH)}</span>{PB.slice(0, 24-nH)}
+      </div>;
+  }
+
+  const handleHourly = datetime => {
+    setDatetime(datetime);
+  }
+
+  const dateFormatMemo = useMemo(() =>
+    dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);  // update dayly
+
+  return (
+    <>
+      <TimeTick
+        hourly={handleHourly}
+      /><br/>
+      {dateFormatMemo}<br/>
+      <ProgressHours nH={datetime.hrs}/>
+    </>
+  );
+}
+
+const TimeTick = props => {
+  const { hourly } = props;
+  const rLastHour = React.useRef(null);  // last tick
+
+  const TF = {  // Time Format
     en     : "en-US",   // en-US, ja-JP, ko-KR, 
     numeric: "numeric",
     short  : "short",
   };
-  const getDatetime = (date = new Date()) => ({
+  const getDatetime = (date = new Date()) => ({  // return an object
     tm: date.toLocaleTimeString(TF.en,
       {
         hour12: false,
@@ -28,33 +67,33 @@ export const ClockProgBar = () => {
     dow: date.getDay(),   // Sun - Sat: 0 - 6
     hrs: date.getHours()  // 0..23
   });
-
   const [datetime, setDatetime] = useState(getDatetime());  // initial setting
+
+  const hourlyFire = () => {
+    hourly && hourly(datetime);
+    rLastHour.current = datetime.hrs;
+  }
+
+  useEffect(() => {  // initial fire
+    setDatetime(getDatetime());
+    hourlyFire();
+    console.log("useEffect for initial fire")
+// eslint-disable-next-line
+  }, []);
 
   useInterval(() => {
     setDatetime(getDatetime());
+    if (rLastHour.current !== datetime.hrs) {  // initially lastH is null, so it works
+      hourlyFire();
+    }
   }, 1000);
 
-  const dateFormat = () => {
-    let dtS = datetime.dt.slice(0,3);
-    dtS += datetime.dt.slice(4,14);
-    return <span className="dtf" data-w={datetime.dow}>{dtS}</span>;
-  }
-
-  // Making this user-defined component <ProgressHours nH={} /> causes re-render every second
-  const progressHours = nH => {
-    const pgb = n => {
-      const PB = '■■■■■■■■■■■■■■■■■■■■■■■■';  // ASCII 254 ■ x 24
-      return PB.slice(0, n);
-    }
-    return <div className="pgb"><span className="on">{pgb(nH)}</span>{pgb(24-nH)}</div>
-  }
-
   return (
-    <>
-      <span className="tmf">{datetime.tm}</span><br/>
-      {dateFormat()}<br/>
-      {progressHours(datetime.hrs)}
-    </>
+    <span className="tmf">{datetime.tm}</span>
   );
 }
+
+/*
+  const dateFormatMemo    = useMemo(() => dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);
+  const progressHoursMemo = useMemo(() => progressHours(datetime.hrs), [datetime.hrs]);
+*/

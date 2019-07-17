@@ -14,7 +14,7 @@ export const ArticlesList = prop => {
   return (
     <div className="artlist">
       <ul>
-        {art.map(a => <li data-b={bullet(a.date)}><a href={a.url}>{a.title}</a></li>)}
+        {art.map( (a, i) => <li key={i} data-b={bullet(a.date)}><a href={a.url}>{a.title}</a></li> )}
       </ul>
       <p><span>Tips</span> Double Click to change the background scene.</p>
     </div>
