@@ -11,7 +11,7 @@ export const ClockProgBar = () => {
     return <span className="dtf" data-w={dow}>{dtS}</span>;
   }
 
-  const ProgressHours = ({nH}) => {
+  const progressHours = nH => {
     const PB = '■■■■■■■■■■■■■■■■■■■■■■■■'; // ASCII 254 ■ x 24
     console.log("progressHours", nH);
     return <div className="pgb">
@@ -23,8 +23,11 @@ export const ClockProgBar = () => {
     setDatetime(datetime);
   }
 
-  const dateFormatMemo = useMemo(() =>
+  // Optimization: Memoize
+  const dateFormatMemo    = useMemo(() =>
     dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);  // update dayly
+  const progressHoursMemo = useMemo(() =>
+    progressHours(datetime.hrs), [datetime.hrs]);
 
   return (
     <>
@@ -32,7 +35,7 @@ export const ClockProgBar = () => {
         hourly={handleHourly}
       /><br/>
       {dateFormatMemo}<br/>
-      <ProgressHours nH={datetime.hrs}/>
+      {progressHoursMemo}/>
     </>
   );
 }
@@ -95,5 +98,4 @@ const TimeTick = props => {
 
 /*
   const dateFormatMemo    = useMemo(() => dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);
-  const progressHoursMemo = useMemo(() => progressHours(datetime.hrs), [datetime.hrs]);
 */

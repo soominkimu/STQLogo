@@ -1,8 +1,8 @@
 import React       from 'react';
-import articles    from './articles.json';
+import { DATA }    from './prepare-data';
 
 export const ArticlesList = prop => {
-  const art = articles.items;
+  const art = DATA.articles.items;  // this variable should not be global due to the asynch data fetch
 
   const bullet = date => {
     const dt = new Date(date);

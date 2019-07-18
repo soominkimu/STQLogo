@@ -1,11 +1,6 @@
-import React        from 'react';
-import { isSafari } from './util-ui';
-import anidef       from './anidef.json'; // edit this file to change colors
+import React          from 'react';
+import { isSafari }   from './util-ui';
 
-export const transParam = anidef.transform;
-export const aniCombi   = anidef.combination;
-
-const factor       = isSafari ? anidef.factorSafari : anidef.factor;
 const mixBlendMode = isSafari ? 'screen' : undefined;  // or 'normal'
 // Animation Variations - combinations of the following:
 // 1. Color Set [rainbow, blues]
@@ -36,7 +31,7 @@ const mixBlendMode = isSafari ? 'screen' : undefined;  // or 'normal'
 
 // This is the body of the animation object
 // that can be referenced through rEl (ref to the DOM element)
-export const AniNeonColors = ({rEl, ani, R}) =>
+export const AniNeonColors = ({factor, rEl, ani, R}) =>
   <div ref={rEl} className="l1">
     {factor.map( (f, q) =>
       f.colors.map( (color, i) =>

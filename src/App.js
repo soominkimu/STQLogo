@@ -2,14 +2,14 @@ import React, { useRef } from 'react';
 import { copyright,
          useWindowSize } from './util-ui';
 import { BackDrop }      from './effects';
-import { AniNeonColors,
-         transParam,
-         aniCombi }      from './ani-neon';
+import { AniNeonColors } from './ani-neon';
 import { ClockProgBar }  from './clock-pb';
 import { ArticlesList }  from './articles';
+import { useFetchData,
+         DATA }          from './prepare-data';
 import './App.scss';
 
-copyright("Logo v0.3");
+copyright("Logo v0.4");
 
 /*
  * Basically we have two classes of animations defined in css:
@@ -24,7 +24,17 @@ function App() {
     useRef(null)  // that differ in CSS animation
   ];
 
-  const ws = useWindowSize();
+  const [dataReady, setDataReady] = React.useState(false);
+
+  useFetchData(error => {  // run only once in the beginning
+    if (error) {
+      window.alert(error);
+      return;
+    }
+    setDataReady(true);
+  });
+
+  const ws = useWindowSize();  // window size change will cause to re-render
 
   const R = (ws.w < 400) ? 76 : 90;  // check only once at the start
   // onClick={()=>void(0)}  // mobile Safari hover
@@ -36,15 +46,15 @@ function App() {
     const setStyle = (rEl, p) =>
       rEl.current.setAttribute("style", `transform: scale(${p.scale}); opacity:${p.opacity};`);
 
-    setStyle(rEA[0], transParam[ac.ref0]);
-    setStyle(rEA[1], transParam[ac.ref1]);
+    setStyle(rEA[0], DATA.anidef.transform[ac.ref0]);
+    setStyle(rEA[1], DATA.anidef.transform[ac.ref1]);
   }
 
   // requires "combination" in anidef.json: variations of the transform parameters (indexed)
   const Controls = () =>
     <div className="btn-cont"
          style={{transform: `translateY(${cY + R * 3}px)`}}>
-         {aniCombi.map( (ac, i) =>
+         {DATA.anidef.combination.map( (ac, i) =>
            <button key={i} type="button" className="test-btn"
              onClick={()=>setAniCombi(ac)}
            /> )
@@ -53,6 +63,14 @@ function App() {
 
   console.log("App::render");
 
+  if (!dataReady) {
+    return (
+      <div className="App">
+        <p className="msg-prepare">SpacetimeQ loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       <BackDrop width={ws.w} height={ws.h} />
@@ -60,8 +78,8 @@ function App() {
       <div className="l3" style={{transform: `translateY(${cY}px)`}}>
         <div className="l2">
           <div className="l1" style={{opacity: 1}}
-            onMouseEnter={()=>setAniCombi(aniCombi[1])}
-            onMouseLeave={()=>setAniCombi(aniCombi[0])}
+            onMouseEnter={()=>setAniCombi(DATA.anidef.combination[1])}
+            onMouseLeave={()=>setAniCombi(DATA.anidef.combination[0])}
           >
             <div className="ctxt" style={{'--ra': R + 'px'}}>
               <div style={{transform: `translateY(${Math.floor(R * .5)}px)`}}>
@@ -71,8 +89,8 @@ function App() {
               </div>
             </div>
           </div>
-          <AniNeonColors rEl={rEA[0]} ani="ca1" R={R} />
-          <AniNeonColors rEl={rEA[1]} ani="ca2" R={R} />
+          <AniNeonColors factor={DATA.anidef.factor} rEl={rEA[0]} ani="ca1" R={R} />
+          <AniNeonColors factor={DATA.anidef.factor} rEl={rEA[1]} ani="ca2" R={R} />
         </div>
       </div>
       <Controls />
