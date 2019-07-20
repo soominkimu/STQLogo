@@ -24,7 +24,7 @@ export const useFetchData = (readyCB, deps=[]) => {
       DATA[data.id].factor = data.factorSafari;
     }
     delete DATA[data.id].factorSafari;  // release
-    console.log(data.id, DATA[data.id]);
+    //console.log(data.id, DATA[data.id]);
     if (++DATA.count >= urls.length)
       readyCB(null);
   }

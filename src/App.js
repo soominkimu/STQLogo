@@ -10,6 +10,7 @@ import { useFetchData,
 import './App.scss';
 
 copyright("Logo v0.4");
+console.log = () => {}
 
 /*
  * Basically we have two classes of animations defined in css:

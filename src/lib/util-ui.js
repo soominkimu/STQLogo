@@ -216,15 +216,26 @@ export function useAnimationFrame(callback, delay) {
   }, [delay]);
 }
 
-// 0: Chrome, 1: Safari, 2: Firefox
+// Simple test version - 0: Chrome, 1: Safari, 2: Firefox
+// https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
 export const detectBrowser = () => {
-  console.log("detectBrowser()");
+  const browserKind = [
+    'chrome',
+    'safari',
+    'firefox',
+    'unknown'
+  ];
+  let brId;
   const ua = navigator.userAgent.toLowerCase();
-  if (ua.indexOf('safari') !== -1)
-    return (ua.indexOf('chrome') > -1) ? 0 : 1;
-  if (ua.indexOf('firefox'))
-    return 2;
-  return -1;
+  if (ua.indexOf('safari') !== -1) {
+    brId = (ua.indexOf('chrome') > -1) ? 0 : 1;
+  } else if (ua.indexOf('firefox')) {
+    brId = 2;
+  } else {
+    brId = 3;
+  }
+  console.log("Detected browser:", browserKind[brId]);
+  return browserKind[brId];
 }
 
 export const detectMobile = () => {
@@ -235,4 +246,4 @@ export const detectMobile = () => {
   return check;
 }
 
-export const isSafari = detectBrowser() === 1;
+export const isSafari = detectBrowser() === 'safari';
