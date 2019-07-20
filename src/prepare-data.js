@@ -1,6 +1,6 @@
 import React             from 'react';
-import { fetchJSON }     from './util-comm'
-import { isSafari }      from './util-ui';
+import { fetchJSON }     from './lib/util-comm'
+import { isSafari }      from './lib/util-ui';
 
 export const DATA = {
   count    : 0,

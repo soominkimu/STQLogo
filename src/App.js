@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { copyright,
-         useWindowSize } from './util-ui';
-import { BackDrop }      from './effects';
+         useWindowSize } from './lib/util-ui';
+import { BackDrop }      from './lib/effects';
 import { AniNeonColors } from './ani-neon';
 import { ClockProgBar }  from './clock-pb';
 import { ArticlesList }  from './articles';

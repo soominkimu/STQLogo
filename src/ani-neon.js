@@ -1,5 +1,5 @@
 import React          from 'react';
-import { isSafari }   from './util-ui';
+import { isSafari }   from './lib/util-ui';
 
 const mixBlendMode = isSafari ? 'screen' : undefined;  // or 'normal'
 // Animation Variations - combinations of the following:

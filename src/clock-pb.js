@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useInterval }   from './util-ui';
+import { useInterval }   from './lib/util-ui';
 
 export const ClockProgBar = () => {
   const [datetime, setDatetime] = useState({dt:"", dow:1, hrs:0});
