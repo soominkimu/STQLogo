@@ -10,7 +10,7 @@ import { useFetchData,
 import './App.scss';
 
 copyright("Logo v0.4");
-console.log = () => {}
+//console.log = () => {}
 
 /*
  * Basically we have two classes of animations defined in css:
@@ -27,13 +27,13 @@ function App() {
 
   const [dataReady, setDataReady] = React.useState(false);
 
-  useFetchData(error => {  // run only once in the beginning
+  useFetchData(error => {  // callback
     if (error) {
       window.alert(error);
       return;
     }
     setDataReady(true);
-  });
+  });  // run only once in the beginning
 
   const ws = useWindowSize();  // window size change will cause to re-render
 
@@ -64,7 +64,7 @@ function App() {
 
   console.log("App::render");
 
-  if (!dataReady) {
+  if (!dataReady) {  // block until the data is loaded
     return (
       <div className="App">
         <p className="msg-prepare">SpacetimeQ loading...</p>
