@@ -1,55 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useInterval }   from './lib/util-ui';
 
-export const ClockProgBar = () => {
-  const [datetime, setDatetime] = useState({dt:"", dow:1, hrs:0});
-
-  const dateFormat = (date, dow) => {
-    let dtS = date.slice(0,3);
-    dtS    += date.slice(4,14);
-    console.log("dateFormat", dtS);
-    return <span className="dtf" data-w={dow}>{dtS}</span>;
-  }
-
-  const progressHours = nH => {
-    const PB = '■■■■■■■■■■■■■■■■■■■■■■■■'; // ASCII 254 ■ x 24
-    console.log("progressHours", nH);
-    return <div className="pgb">
-        <span className="on">{PB.slice(0, nH)}</span>{PB.slice(0, 24-nH)}
-      </div>;
-  }
-
-  const handleHourly = datetime => {
-    setDatetime(datetime);
-  }
-
-  // Optimization: Memoize
-  const dateFormatMemo    = useMemo(() =>
-    dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);  // update dayly
-  const progressHoursMemo = useMemo(() =>
-    progressHours(datetime.hrs), [datetime.hrs]);
-
-  return (
-    <>
-      <TimeTick
-        hourly={handleHourly}
-      /><br/>
-      {dateFormatMemo}<br/>
-      {progressHoursMemo}/>
-    </>
-  );
-}
-
-const TimeTick = props => {
-  const { hourly } = props;
-  const rLastHour = React.useRef(null);  // last tick
-
+const getDatetime = (date = new Date()) => {
   const TF = {  // Time Format
-    en     : "en-US",   // en-US, ja-JP, ko-KR, 
+    en     : "en-US",   // en-US, ja-JP, ko-KR,
     numeric: "numeric",
     short  : "short",
   };
-  const getDatetime = (date = new Date()) => ({  // return an object
+  return ({  // return an object
     tm: date.toLocaleTimeString(TF.en,
       {
         hour12: false,
@@ -69,20 +27,50 @@ const TimeTick = props => {
       }),
     dow: date.getDay(),   // Sun - Sat: 0 - 6
     hrs: date.getHours()  // 0..23
-  });
+  })
+};
+
+export const ClockProgBar = () => {
+  const [datetime, setDatetime] = useState(getDatetime());
+
+  const dateFormat = (date, dow) => {
+    console.log("dateFormat", date);
+    return <span className="dtf" data-w={dow}>{date.replace(", ", ".")}</span>;
+  }
+
+  const progressHours = nH => {
+    const PB = '■'; // ASCII 254 ■ x 24
+    console.log("progressHours", nH);
+    return <div className="pgb">
+        <span className="on">{PB.repeat(nH)}</span>{PB.repeat(24-nH)}
+      </div>;
+  }
+
+  // Optimization: Memoize
+  const dateFormatMemo    = useMemo(() =>
+    dateFormat(datetime.dt, datetime.dow), [datetime.dt, datetime.dow]);  // update dayly
+  const progressHoursMemo = useMemo(() =>
+    progressHours(datetime.hrs), [datetime.hrs]);
+
+  return (
+    <>
+      <TimeTick hourly={datetime => setDatetime(datetime)} /><br/>
+      {dateFormatMemo}<br/>
+      {progressHoursMemo}
+    </>
+  );
+}
+
+const TimeTick = props => {
+  const { hourly } = props;              // hourly callback
+  const rLastHour = React.useRef(null);  // last tick
+
   const [datetime, setDatetime] = useState(getDatetime());  // initial setting
 
   const hourlyFire = () => {
-    hourly && hourly(datetime);
+    hourly?.(datetime);
     rLastHour.current = datetime.hrs;
   }
-
-  useEffect(() => {  // initial fire
-    setDatetime(getDatetime());
-    hourlyFire();
-    console.log("useEffect for initial fire")
-// eslint-disable-next-line
-  }, []);
 
   useInterval(() => {
     setDatetime(getDatetime());

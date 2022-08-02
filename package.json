@@ -1,17 +1,20 @@
 {
-  "name": "STQ",
-  "version": "0.1.0",
+  "name": "logo",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://www.spacetimeq.com/",
   "dependencies": {
-    "node-sass": "^4.12.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build:sass": "sass src/App.scss src/App.css",
+    "watch:sass": "chokidar 'src/*.scss' 'src/*/*.tsx' --ignore 'src/*.css' -c 'yarn run build:sass'",
+    "start": "npm-run-all build:sass --parallel start:react",
+    "build": "npm-run-all build:sass --parallel build:react",
+    "start:react": "react-scripts start",
+    "build:react": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -31,6 +34,8 @@
     ]
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.3"
+    "chokidar-cli": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "sass": "^1.54.0"
   }
 }

@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  randomRange, randomInt, randomElement, τ
+  randomRange,
+  randomInt,
+  randomElement,
+  τ
 } from './util-math';
 
 // Actually, we don't have to regenerate the pattern for each screen resize.

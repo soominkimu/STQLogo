@@ -1,0 +1,254 @@
+:root {
+  background: black;
+}
+
+@font-face {
+  font-family: "digital-7";
+  src: url("./digital-7 (mono).ttf");
+}
+.App {
+  font-family: Courier, Arial;
+}
+
+.ctxt, .ca2, .ca1 {
+  border-radius: 50%;
+  position: absolute;
+  left: calc(50% - var(--ra));
+  top: calc(50% - var(--ra));
+  width: calc(var(--ra) * 2);
+  height: calc(var(--ra) * 2);
+}
+
+.ca2, .ca1 {
+  pointer-events: none;
+  mix-blend-mode: var(--bm);
+}
+
+.ca1 {
+  box-shadow: 0 0 4px 3px rgba(255, 255, 255, 0.1), 0 0 20px 15px var(--cl), inset 0 0 20px 15px var(--cl);
+  animation: ani-cloud var(--t) ease-in infinite alternate;
+}
+
+.ca2 {
+  box-shadow: 0 0 4px 3px rgba(255, 255, 255, 0.4), 0 0 15px 10px var(--cl), inset 0 0 15px 6px var(--cl);
+  animation: ani-hair var(--t) ease-in infinite alternate;
+}
+
+/*
+.ca3 {
+  @extend %centered-circle;
+  @extend %outer-circle;
+  box-shadow:
+          0 0  1px  1px rgba(255,255,255,.3),
+          0 0 15px 10px var(--cl),
+    inset 0 0 15px  6px var(--cl),
+          0 0 25px 20px var(--cl),
+    inset 0 0 25px 16px var(--cl);
+  animation: ani-exp var(--t) ease-out infinite alternate; 
+}
+*/
+.ctxt .pgb, .ctxt .dtf, .ctxt .tmf {
+  font-family: "digital-7", "Orbitron", sans-serif;
+}
+
+.ctxt .s3d, .ctxt .stq {
+  text-shadow: 1px 1px 1px black;
+}
+
+.ctxt:hover {
+  z-index: 1000;
+  transform: scale(2);
+}
+
+.ctxt {
+  text-align: center;
+  box-shadow: inset 0 0 14px 8px rgba(128, 128, 128, 0.7);
+  transition: transform 1s cubic-bezier(0.75, -0.5, 0, 1.75);
+}
+.ctxt .tmf {
+  font-size: 1.9rem;
+  color: LightCyan;
+  text-shadow: 0 0 2px blue, 0 0 3px yellow, 0 0 4px white, -2px -2px 4px blue, 2px 2px 4px blue;
+}
+.ctxt .tmf .blink {
+  animation: blink-sec 1s ease-in infinite;
+}
+.ctxt .dtf {
+  font-size: 1.2rem;
+  color: CornSilk;
+}
+.ctxt .dtf[data-w="0"] {
+  color: Red;
+}
+.ctxt .dtf[data-w="6"] {
+  color: DodgerBlue;
+}
+.ctxt .pgb {
+  font-size: 0.3rem;
+  color: Blue;
+}
+.ctxt .pgb .on {
+  color: Cyan;
+  text-shadow: 0 0 4px white, -2px -2px 4px blue, 2px 2px 4px blue;
+}
+.ctxt .stq {
+  font-size: 1rem;
+  font-weight: bold;
+  color: DodgerBlue;
+}
+.ctxt .stq .tail {
+  color: BlueViolet;
+}
+.ctxt .s3d {
+  font-size: 0.8rem;
+  color: Cyan;
+}
+.ctxt .s3d .tail {
+  color: Magenta;
+}
+
+.l1 {
+  transition: transform 3s ease-out, opacity 5s;
+}
+
+.l2 {
+  animation: ani-l1 2.3s ease-in infinite alternate;
+}
+
+@keyframes ani-l1 {
+  to {
+    transform: scale(0.9);
+  }
+}
+/*
+.popup {  // for mobile safari
+  @extend %popup;
+}
+
+.spotlight {
+  @extend %centered-circle;
+  background: radial-gradient(circle, white, transparent 25%) center / 50% 50%,
+              radial-gradient(circle, blue,  transparent 35%) center / 50% 40%;
+  animation: ani-rotate 10s linear infinite;
+  opacity: .1;
+  mix-blend-mode: normal;
+}
+  background: radial-gradient(circle, white, transparent 25%) center / 25%   25%,
+              radial-gradient(circle, white, black       25%) center / 12.5% 12.5%;
+
+@keyframes ani-rotate {
+  to { transform: rotateZ(360deg); }
+}
+@keyframes jiggle {
+  from { transform: rotateY(0deg)    rotateX(-23.5deg); }
+  to   { transform: rotateY(43.5deg) rotateX(23.5deg); }
+}
+  from { transform: rotateZ(0deg)   scaleX(.9)  scaleY(.9)  rotateY(0deg); }
+  from { transform: rotateX(0deg)   rotateY(0deg); }
+@keyframes ani-exp {
+  from { transform: translateX(-10px) translateY(-10px) rotateZ(0deg)   scaleX(.9)  scaleY(.9)  rotateY(0deg); }
+  to   { transform: translateX(10px)  translateY(10px)  rotateZ(360deg) scaleX(1.2) scaleY(1.3) rotateY(45deg); }
+}
+*/
+@keyframes ani-cloud {
+  to {
+    transform: rotateZ(360deg) scaleX(1.2) scaleY(1.5) rotateY(45deg);
+  }
+}
+@keyframes ani-hair {
+  to {
+    transform: rotateX(180deg) rotateY(180deg);
+  }
+}
+@keyframes blink-sec {
+  to {
+    opacity: 0;
+  }
+}
+.btn-cont {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.test-btn {
+  background: transparent;
+  border-radius: 50%;
+  border: 4px solid rgba(154, 205, 50, 0.4);
+  padding: 4px 4px;
+  font: small "Courier New", sans-serif;
+  text-align: center;
+  display: inline-block;
+  font-size: 10px;
+  width: 24px;
+  height: 24px;
+  margin: 10px;
+  z-index: 100;
+}
+.test-btn:hover {
+  box-shadow: 0 0 8px 6px rgba(0, 255, 255, 0.5);
+}
+.test-btn:focus {
+  outline: 0;
+  box-shadow: 0 0 12px 10px rgba(238, 130, 238, 0.5);
+}
+
+.test-btn:disabled,
+test-btn[disabled] {
+  border: 1px solid olive;
+  background-color: darkgray;
+  color: SlateGray;
+}
+
+.artlist {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  line-height: 2em;
+  margin-top: 3em;
+  font-family: Courier;
+  font-weight: bold;
+  color: white;
+}
+.artlist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.artlist li {
+  list-style: none;
+  text-indent: -0.7em;
+}
+.artlist li::before {
+  font-size: small;
+  color: Red;
+  content: attr(data-b);
+}
+.artlist a {
+  text-decoration: none;
+}
+.artlist a:hover {
+  text-shadow: 0 0 10px pink;
+}
+.artlist a:link {
+  color: white;
+}
+.artlist a:visited {
+  color: SkyBlue;
+}
+.artlist p {
+  color: CornSilk;
+  font-size: x-small;
+  font-style: italic;
+}
+.artlist p span {
+  color: Blue;
+}
+
+.msg-prepare {
+  color: Gray;
+  text-align: center;
+}
+
+/*# sourceMappingURL=App.css.map */

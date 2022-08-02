@@ -7,7 +7,7 @@ import { ClockProgBar }  from './clock-pb';
 import { ArticlesList }  from './articles';
 import { useFetchData,
          DATA }          from './prepare-data';
-import './App.scss';
+import './App.css';
 
 copyright("Logo v0.4");
 //console.log = () => {}

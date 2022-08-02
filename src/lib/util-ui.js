@@ -55,9 +55,9 @@ function App() {
       <div>h, s, r, f</div>
       <div>
         {happyPress && '😊'}
-        {sadPress && '😢'}
+        {sadPress   && '😢'}
         {robotPress && '🤖'}
-        {foxPress && '🦊'}
+        {foxPress   && '🦊'}
       </div>
     </div>
   );
@@ -132,7 +132,7 @@ export const EventMove = props => {
     
   const handleMouseDown = ev => { _moveStart(ev); }
   const handleMouseMove = ev => { _move(ev); }
-  const handleMouseUp   = ev => { _moveEnd(); }
+  const handleMouseUp   = _ev => { _moveEnd(); }
 
   const handleTouchStart = ev => {
     ev.preventDefault();
