@@ -23,3 +23,15 @@ yarn-debug.log*
 yarn-error.log*
 
 *.swp
+
+/dist/**
+**/*.map
+
+# asdf
+.tool-versions
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
